@@ -1,0 +1,1 @@
+RPCS3 Custom Updater, qwen3 coder
