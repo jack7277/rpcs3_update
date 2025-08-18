@@ -98,7 +98,8 @@ async def extract_7z_with_external_tool_async(archive_path: str, extract_to: str
 
         if process.returncode == 0:
             print("Архив успешно распакован с помощью 7-Zip.")
-            # print(stdout.decode()) # Опционально: вывод лога 7-Zip
+            print(stdout.decode()) # Опционально: вывод лога 7-Zip
+            os.remove(archive_path)
             return True
         else:
             print(f"Ошибка при распаковке архива с помощью 7-Zip. Код возврата: {process.returncode}")
