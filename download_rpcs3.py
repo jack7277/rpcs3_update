@@ -1,14 +1,14 @@
 import asyncio
-import aiohttp
-import aiofiles
 import os
-import subprocess
 import shutil
+
+import aiofiles
+import aiohttp
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 # --- Конфигурация ---
 START_URL = "https://rpcs3.net/quickstart"
@@ -17,6 +17,13 @@ SEVEN_ZIP_PATH = shutil.which("7z") or shutil.which("7za") or r"C:\Program Files
 
 
 # --- Функции (остаются синхронными или адаптируются) ---
+
+def kill_process_by_name(proc_name):
+    try:
+        os.system(f'taskkill /f /im {proc_name} /fi "username eq %username%" >nul')
+    except:
+        pass
+
 
 def find_download_link_selenium(url):
     """Находит ссылку на архив, используя Selenium. (Синхронная функция)"""
@@ -98,7 +105,7 @@ async def extract_7z_with_external_tool_async(archive_path: str, extract_to: str
 
         if process.returncode == 0:
             print("Архив успешно распакован с помощью 7-Zip.")
-            print(stdout.decode()) # Опционально: вывод лога 7-Zip
+            print(stdout.decode())  # Опционально: вывод лога 7-Zip
             os.remove(archive_path)
             return True
         else:
@@ -117,6 +124,8 @@ async def extract_7z_with_external_tool_async(archive_path: str, extract_to: str
 # --- Основная асинхронная логика ---
 
 async def main():
+    kill_process_by_name('rpcs3.exe')
+
     """Главная асинхронная функция."""
     # 1. Найти ссылку (пока синхронно, можно обернуть в asyncio.to_thread если нужно)
     # download_url = find_download_link_selenium(START_URL)
