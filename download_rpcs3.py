@@ -11,7 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 # --- Конфигурация ---
-START_URL = "https://rpcs3.net/quickstart"
+START_URL = "https://github.com/RPCS3/rpcs3-binaries-win"
 EXTRACT_PATH = r"C:\Games\rpcs3"
 SEVEN_ZIP_PATH = shutil.which("7z") or shutil.which("7za") or r"C:\Program Files\7-Zip\7z.exe"
 
@@ -36,6 +36,9 @@ def find_download_link_selenium(url):
         driver.get(url)
         print(f"Страница загружена: {url}")
         wait = WebDriverWait(driver, 10)
+
+        download_link_element = wait.until(EC.presence_of_element_located((By.XPATH, "(//*[contains(text(), 'Latest')])[last()]")))
+        download_link_element.click()
         download_link_element = wait.until(
             EC.presence_of_element_located((By.XPATH, "//a[contains(@href, 'win64') and contains(@href, '.7z')]"))
         )
